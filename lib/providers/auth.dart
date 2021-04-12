@@ -40,6 +40,7 @@ class Auth extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Get user details manually from Auth0.
   Future<Map<String, dynamic>> _getUserDetails(String accessToken) async {
     final Uri uri = Uri.parse('https://${Constants.AUTH0_DOMAIN}/userinfo');
     final response = await http.get(
@@ -55,14 +56,17 @@ class Auth extends ChangeNotifier {
   }
 
   void init() async {
+    // Prevent concurrency during init.
+    if (isBusy) {
+      return;
+    }
+
     final String? refreshToken =
         await FlutterSecureStorage().read(key: Constants.SECURE_REFRESH_TOKEN);
 
     if (refreshToken == null) {
       return;
     }
-
-    // TODO: Do not refresh if not needed.
 
     isBusy = true;
 
@@ -80,6 +84,8 @@ class Auth extends ChangeNotifier {
       await _updateProfile(result!);
     } catch (e, s) {
       print('[LOGIN ERROR]: $e - $s');
+
+      // Logout if things go wrong regardless of previous state.
       logoutAction();
     }
   }
@@ -122,5 +128,3 @@ class Auth extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-enum AuthState { LOGGED_IN, NOT_LOGGED_IN }
