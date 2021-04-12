@@ -14,10 +14,13 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Hello!'),
-            ElevatedButton(
-              child: Text('LOGIN'),
-              onPressed: context.read<Auth>().loginAction,
-            ),
+            // Watch logging-in state and display appropriate widget.
+            context.watch<Auth>().isBusy
+                ? CircularProgressIndicator()
+                : ElevatedButton(
+                    child: Text('LOGIN'),
+                    onPressed: context.read<Auth>().loginAction,
+                  ),
           ],
         ),
       ),
