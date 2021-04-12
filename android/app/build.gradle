@@ -40,7 +40,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         manifestPlaceholders = [
-            'appAuthRedirectScheme': 'com.example.flutter_code_challenge'
+            'appAuthRedirectScheme': 'com.example.fluttercodechallenge'
         ]
     }
 
