@@ -6,20 +6,22 @@ class Location extends ChangeNotifier {
   bool isBusy = false;
   Coordinates? coordinates;
 
-  Future<void> getPosition() async {
+  // Specify notifyListeners flag to allow callers to decide whether or not
+  // they are notifying actions and to prevent unnecessary rebuilds.
+  Future<void> getPosition({bool notifyListeners = true}) async {
     bool serviceEnabled;
     LocationPermission permission;
 
     isBusy = true;
 
-    notifyListeners();
+    _callNotifyListeners(notifyListeners);
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
     if (!serviceEnabled) {
       isBusy = false;
 
-      notifyListeners();
+      _callNotifyListeners(notifyListeners);
 
       return Future.error('Location services are disabled.');
     }
@@ -32,7 +34,7 @@ class Location extends ChangeNotifier {
       if (permission == LocationPermission.deniedForever) {
         isBusy = false;
 
-        notifyListeners();
+        _callNotifyListeners(notifyListeners);
 
         return Future.error(
             'Location permissions are permanently denied, we cannot request permissions.');
@@ -41,7 +43,7 @@ class Location extends ChangeNotifier {
       if (permission == LocationPermission.denied) {
         isBusy = false;
 
-        notifyListeners();
+        _callNotifyListeners(notifyListeners);
 
         return Future.error('Location permissions are denied');
       }
@@ -52,6 +54,15 @@ class Location extends ChangeNotifier {
     coordinates = Coordinates(position.latitude, position.longitude);
     isBusy = false;
 
-    notifyListeners();
+    _callNotifyListeners(notifyListeners);
+  }
+
+  // Some getPosition callers don't need to notify others of the change.
+  // Callers can specify that they don't need to notify the other listeners
+  // and prevent unnecessary rebuilds.
+  void _callNotifyListeners(bool shouldNotifyListeners) async {
+    if (shouldNotifyListeners) {
+      notifyListeners();
+    }
   }
 }
