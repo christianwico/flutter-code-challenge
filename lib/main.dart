@@ -3,12 +3,20 @@ import 'package:flutter_code_challenge/pages/auth/home/auth_home_page.dart';
 import 'package:flutter_code_challenge/pages/auth/weather/weather_page.dart';
 import 'package:flutter_code_challenge/pages/home/home_page.dart';
 import 'package:flutter_code_challenge/providers/auth.dart';
+import 'package:flutter_code_challenge/providers/location.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => Auth(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => Auth(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Location(),
+        ),
+      ],
       child: MyApp(),
     ),
   );
