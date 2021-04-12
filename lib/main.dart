@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_code_challenge/pages/auth/home/auth_home_page.dart';
+import 'package:flutter_code_challenge/pages/auth/weather/weather_page.dart';
 import 'package:flutter_code_challenge/pages/home/home_page.dart';
 import 'package:flutter_code_challenge/providers/auth.dart';
 import 'package:provider/provider.dart';
@@ -25,12 +27,28 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class AppTabs extends StatelessWidget {
+class AppTabs extends StatefulWidget {
+  final List<Widget> pages = [
+    AuthHomePage(),
+    WeatherPage(),
+  ];
+
+  @override
+  _AppTabsState createState() => _AppTabsState();
+}
+
+class _AppTabsState extends State<AppTabs> {
+  int currentIndex = 0;
+
+  void itemTapped(int index) {
+    setState(() => currentIndex = index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex,
         items: [
           BottomNavigationBarItem(
             label: 'Home',
@@ -41,7 +59,9 @@ class AppTabs extends StatelessWidget {
             icon: Icon(Icons.wb_sunny),
           ),
         ],
+        onTap: itemTapped,
       ),
+      body: widget.pages[currentIndex],
     );
   }
 }
