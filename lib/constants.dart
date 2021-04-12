@@ -5,4 +5,5 @@ class Constants {
       'com.example.fluttercodechallenge://login-callback';
   static const AUTH0_ISSUER = 'https://$AUTH0_DOMAIN';
   static const SECURE_REFRESH_TOKEN = 'secure_refresh_token';
+  static const OWM_API_KEY = '0995ba9e5e560135a64989067ce1d701';
 }
